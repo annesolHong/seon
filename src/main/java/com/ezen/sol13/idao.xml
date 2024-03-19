@@ -1,0 +1,95 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.ezen.sol13.Service">
+
+<resultMap type="com.ezen.sol13.MyscoreDTO" id="myscdto">
+	<result property="bun" column="bun"/>
+	<result property="kor" column="kor"/>
+	<result property="eng" column="eng"/>
+	<result property="mat" column="mat"/>
+</resultMap>
+
+
+<resultMap type="com.ezen.sol13.MyinfoDTO" id="myindto">
+	<result property="bun" column="bun"/>
+	<result property="name" column="name"/>
+	<result property="age" column="age"/>
+	<result property="address" column="address"/>
+	<collection property="myscoreDTO" 
+	ofType="com.ezen.sol13.MyscoreDTO" resultMap="myscdto"/>
+</resultMap>
+
+
+
+<resultMap type="com.ezen.sol13.ScoreDTO" id="sdto">
+	<result property="id" column="id"/>
+	<result property="kor" column="kor"/>
+	<result property="eng" column="eng"/>
+	<result property="mat" column="mat"/>
+	<result property="tot" column="tot"/>
+</resultMap>
+
+
+<resultMap type="com.ezen.sol13.InsaDTO" id="insadto">
+	<result property="id" column="id"/>
+	<result property="family" column="family"/>
+	<result property="money" column="money"/>
+	<result property="position" column="position"/>
+	<result property="pay" column="pay"/>
+</resultMap>
+
+
+<resultMap type="com.ezen.sol13.InfoDTO" id="infodto">
+	<result property="id" column="id"/>
+	<result property="tel" column="tel"/>
+	<result property="name" column="name"/>
+	<collection property="scoredto" 
+	ofType="com.ezen.sol13.ScoreDTO" resultMap="sdto"/>
+	<collection property="insadto" 
+	ofType="com.ezen.sol13.InsaDTO" resultMap="insadto"/>
+</resultMap>
+
+
+
+
+
+
+ 
+<insert id="inserta">
+	insert into myinfo0228 values(#{param1},#{param2},#{param3})
+</insert>
+
+
+<!-- <select id="print" resultType="com.ezen.sol13.MyinfoDTO">
+	select * from myinfo0228
+</select> -->
+
+<select id="print" resultMap="myindto">
+	select indto.bun, indto.name, indto.age, indto.address, 
+	scdto.kor, scdto.eng, scdto.mat 
+	from myinfodto0318 indto, myscore0318 scdto 
+	where indto.bun = scdto.bun
+</select>
+
+
+<delete id="delinfo">
+	delete from myinfo0228 where name=#{param1}
+</delete>
+
+
+<select id="payout" resultMap="infodto">
+	select 
+	sc.id, mf.name,mf.tel, (sc.kor+sc.eng+sc.mat)as tot,
+	sa.position, (sa.sudang+sa.money) as pay
+	from score0319 sc join myinfo0319 mf
+	on sc.id = mf.id join insa0319 sa
+	on mf.id = sa.id
+</select>
+
+
+
+
+
+</mapper>
